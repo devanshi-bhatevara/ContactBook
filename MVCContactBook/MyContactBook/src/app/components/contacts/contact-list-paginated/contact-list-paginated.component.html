@@ -1,0 +1,129 @@
+<h1>Contacts</h1>
+<div *ngIf="loading">
+  <img src="assets/loaderImage.gif" alt="Loading...">
+  </div>
+  <div>
+    <p *ngIf="selectedLetter" class="selected-letter">{{ selectedLetter }}</p>
+  </div>
+  
+  <div>
+    <div class="row mb-4">
+      <div class="col-md-7">
+        <input type="text" [(ngModel)]="searchQuery" class="form-control" (input)="searchContacts()" placeholder="Search contacts...">
+      </div>
+      <div class="col-md-3 ml-0">
+        <button type="button" class="btn btn-outline-secondary" (click)="clearSearch()">Clear</button>
+      </div>
+    </div>
+    <div>
+      <ng-container *ngIf="contacts && contacts.length > 0">
+      <button class="btn btn-outline-primary mr-2" *ngFor="let letter of uniqueFirstLetters; let i = index" (click)="onLetterClick(letter)" [style.color]="colors[i]" [class.active]="selectedLetter === letter">{{ letter }}</button>
+    </ng-container>
+
+      <button class="btn btn-outline-primary" style="color: red;" (click)="onShowAll()">Show All</button>
+      </div>
+  
+      <table class="table table-striped" *ngIf="!loading">
+        <thead>
+      <tr>
+        <th>Profile Photo</th>
+        <th>
+          <div class="fas fa-caret-up arrowup" (click)="sortAsc(selectedLetter)"></div>
+          <div class="fas fa-caret-down arrowdown" (click)="sortDesc(selectedLetter)"></div>
+          Name
+      </th>
+      
+        <th></th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="contacts && contacts.length > 0 && totalContacts != 0; else noContacts">
+      
+      <tr *ngFor="let contact of contacts" >
+        
+        <td *ngIf="contact.fileName!=null" >
+          <img *ngIf="contact.imageByte" class="card-image" [src]="'data:image/jpeg;base64,' + contact.imageByte" alt="Contact Image"
+          [style.height.px]="50" [style.width.px]="50" style="border-radius: 50%;">
+        </td>
+        <td *ngIf="contact.fileName==null">
+          <img
+            src="assets/DefaultImage.jpg"
+            alt="image"
+            width="50"
+            height="50"
+            style="border-radius: 50%"
+          />
+        </td>
+        <td>{{ contact.firstName }} {{ contact.lastName }}</td>
+        <!-- <td> <span *ngIf="contact.isFavourite" class="fa fa-star text-warning"></span></td> -->
+        <td>
+          <span (click)="toggleFavourite(contact)" style="cursor: pointer;">
+              <i *ngIf="contact.isFavourite" class="fa fa-star text-warning"></i>
+              <i *ngIf="!contact.isFavourite" class="fa fa-star" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></i>
+            </span>
+      </td>
+        <td>
+          <a class="btn btn-outline-warning m-1" [routerLink]="['/contactDetails', contact.contactId]" routerLinkActive="router-link-active">
+              <i class="fas fa-info-circle"></i>
+          </a>
+          <a *ngIf="isAuthenticated" class="btn btn-outline-info m-1" [routerLink]="['/editContact', contact.contactId]" routerLinkActive="router-link-active">
+              <i class="fas fa-edit"></i>
+          </a>
+          <a *ngIf="isAuthenticated" class="btn btn-outline-info m-1" [routerLink]="['/editContactTF', contact.contactId]" routerLinkActive="router-link-active">
+              <i class="fas fa-edit">TF</i>
+          </a>
+          <button *ngIf="isAuthenticated" class="btn btn-outline-danger m-1" (click)="deleteContact(contact.contactId)">
+              <i class="fas fa-trash-alt"></i>
+          </button>
+      </td>
+      </tr>
+    </tbody>
+
+    <ng-template #noContacts>
+      <tr *ngIf="!loading">
+        <td colspan="4" class="text-center justify-content-center">No contacts found</td>
+      </tr>
+    </ng-template>
+  </table>
+
+  <div *ngIf="totalContacts != 0" class="pagination-container">
+    <!-- Previous and Next Buttons -->
+    <div class="pagination-navigation">
+      <button class="btn btn-outline-primary" (click)="onPageChange(1, selectedLetter)" [disabled]="currentPage === 1">
+        <i class="fa-solid fa-angles-left"></i>
+    </button>
+        <button class="btn btn-outline-primary" (click)="onPageChange(currentPage - 1, selectedLetter)" [disabled]="currentPage === 1">
+            <i class="fas fa-chevron-left"></i> <!-- Font Awesome icon for "chevron left" -->
+        </button>
+        <div class="btn-group" role="group" aria-label="Pagination buttons">
+            <button class="btn btn-outline-primary" *ngFor="let pageNumber of totalPages" (click)="onPageChange(pageNumber, selectedLetter)" [disabled]="currentPage === pageNumber" [ngClass]="{ 'active-page': currentPage === pageNumber }">
+                {{ pageNumber }}
+            </button>
+        </div>
+        <button class="btn btn-outline-primary" (click)="onPageChange(currentPage + 1, selectedLetter)" [disabled]="currentPage * pageSize >= totalContacts">
+            <i class="fas fa-chevron-right"></i> <!-- Font Awesome icon for "chevron right" -->
+        </button>
+        <button class="btn btn-outline-primary" (click)="onPageChange(totalPages[totalPages.length - 1], selectedLetter)" [disabled]="currentPage === totalPages[totalPages.length - 1]">
+          <i class="fa-solid fa-angles-right"></i>
+
+      </button>
+    </div>
+
+    <!-- Page Size Selection -->
+    <div class="page-size-selection ml-auto">
+        <span>Page Size:</span>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange(selectedLetter)" class="custom-select">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+        </select>
+    </div>
+</div>
+ 
+  <div class="fluid-container">
+
+<a *ngIf="isAuthenticated" class="btn btn-outline-info" [routerLink]="['/addContact']" routerLinkActive="router-link-active">Add</a>
+<a *ngIf="isAuthenticated" class="btn btn-outline-info" [routerLink]="['/addContactTF']" routerLinkActive="router-link-active">Add TF</a>
+<a *ngIf="totalContacts !=0" class="btn btn-outline-info" [routerLink]="['/favourites']" routerLinkActive="router-link-active" ><i class="fa fa-star text-warning"></i> View favourites</a>
+</div>

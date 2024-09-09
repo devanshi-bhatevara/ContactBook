@@ -1,0 +1,56 @@
+<h1>Contacts</h1>
+
+<!-- <div>
+  <button
+    class="btn btn-outline-primary"
+    type="submit"
+    name="letter"
+    value="@letter"
+  >
+    Letter
+  </button>
+  <button class="btn btn-outline-primary" type="submit" name="letter" value="">
+    Show All
+  </button>
+</div> -->
+<div *ngIf="loading">
+  <img src="assets/loaderImage.gif" alt="Loading...">
+  </div>
+  <table class="table" *ngIf="!loading">  <thead>
+    <tr>
+      <th>Profile Photo</th>
+      <th>Name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngIf="!loading && !contacts">
+      <td colspan="3">No contacts found</td>
+          </tr>
+    <tr *ngFor="let contact of contacts">
+      <td *ngIf="contact.fileName!=null">
+        <img *ngIf="contact.imageByte" class="card-image" [src]="'data:image/jpeg;base64,' + contact.imageByte" alt="Contact Image"
+        [style.height.px]="50" [style.width.px]="50" style="border-radius: 50%;">
+      </td>
+      <td *ngIf="contact.fileName==null">
+        <img
+          src="assets/DefaultImage.jpg"
+          alt="image"
+          width="50"
+          height="50"
+          style="border-radius: 50%"
+        />
+      </td>
+      <td>{{contact.firstName}} {{contact.lastName}}</td>
+
+      <td >
+        <a class="btn btn-outline-warning m-1" [routerLink]="['/contactDetails', contact.contactId]" routerLinkActive="router-link-active"   >Details</a>
+        <a *ngIf="isAuthenticated" class="btn btn-outline-info m-1" [routerLink]="['/editContact', contact.contactId]" routerLinkActive="router-link-active"   >Edit</a>
+        <button *ngIf="isAuthenticated" class="btn btn-outline-danger m-1" (click)="deleteContact(contact.contactId)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<a *ngIf="isAuthenticated" class="btn btn-outline-info" [routerLink]="['/addContact']" routerLinkActive="router-link-active"   >Add</a>

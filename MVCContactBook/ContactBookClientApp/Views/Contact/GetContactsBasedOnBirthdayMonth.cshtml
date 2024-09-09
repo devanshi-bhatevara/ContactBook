@@ -1,0 +1,94 @@
+﻿@using ContactBookClientApp.ViewModels
+@model List<ContactSPViewModel>
+@{
+    var viewMonth = ViewBag.Month;
+}
+<h3 class="text-center">Contacts based on Birthday month</h3>
+<br />
+<div class="d-flex justify-content-center align-items-center">
+<select id="selectedMonth" name="Month" class="form-control" style="width:200px;">
+    @if (viewMonth == null)
+    {
+        <option value="@viewMonth">----Select Month----</option>
+    }
+    else
+    {
+        <option value="@viewMonth">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(@viewMonth)</option>
+    }
+    @for (int month = 1; month <= 12; month++)
+    {
+        if(viewMonth != month)
+        {
+        <option value="@month">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month)</option>
+        }
+    }
+</select>
+</div>
+<br />
+
+<table class="table">
+    @if (ViewBag.Month != null)
+    {
+        <thead>         
+            <tr>             
+            <th>First Name</th>             
+            <th>Last Name</th>             
+            <th>Phone</th>             
+            <th>Address</th>             
+            <th>Email</th>             
+            <th>Gender</th>             
+            <th>Is Favourite</th>             
+            <th>Country</th>             
+            <th>State</th>             
+            <th>Birth Date</th>         
+        </tr>    
+        </thead>
+        }
+        @if(ViewBag.Month!=null)
+        {
+        <tbody>
+
+            @if(Model==null || Model.Count == 0)
+        {
+            <tr>
+                    <td colspan="10" class="text-center">No records found</td>
+            </tr>
+        }
+        else
+        {
+        @foreach (var contact in Model)
+        {
+            <tr>                 
+                <td>@contact.FirstName</td>                 
+                <td>@contact.LastName</td>                 
+                <td>@contact.Phone</td>                 
+                <td>@contact.Address</td>                 
+                <td>@contact.Email</td>                 
+                <td>@contact.Gender</td>                 
+                <td>@(contact.IsFavourite ? "Yes" : "No")</td>                 
+                <td>@contact.CountryName</td>                
+                <td>@contact.StateName</td>                 
+                <td>@(contact.birthDate.HasValue ? contact.birthDate.Value.ToShortDateString() : "")</td>             
+            </tr>
+        }
+        }
+    </tbody>
+    }
+</table>
+
+<div class="container">
+    <a asp-action="Index" class="btn btn-secondary">Back To List</a>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedMonth = document.getElementById("selectedMonth");
+        selectedMonth.addEventListener("change", function () {
+            console.log(selectedMonth.value)
+
+            window.location.href = '@Url.Action("GetContactsBasedOnBirthdayMonth", "Contact")?month=' + encodeURIComponent(selectedMonth.value);
+
+        });
+    });
+
+</script>

@@ -1,0 +1,96 @@
+<h1>Contacts</h1>
+<div *ngIf="loading">
+  <img src="assets/loaderImage.gif" alt="Loading...">
+  </div>
+
+  <div class="table-responsive">
+    <div>
+      <ng-container *ngIf="contacts && contacts.length > 0">
+        <button class="btn btn-outline-primary mr-2" *ngFor="let letter of uniqueFirstLetters; let i = index" (click)="onLetterClick(letter)" [style.color]="colors[i]" [class.active]="selectedLetter === letter">{{ letter }}</button>
+      </ng-container>
+        <button class="btn btn-outline-primary" style="color: red;" (click)="onShowAll()">Show All</button>
+      </div>
+      <table class="table table-striped" *ngIf="!loading">
+        <thead>
+      <tr>
+        <th>Profile Photo</th>
+        <th>
+          <div class="fas fa-caret-up arrowup" (click)="sortAsc(selectedLetter)"></div>
+          <div class="fas fa-caret-down arrowdown" (click)="sortDesc(selectedLetter)"></div>
+          Name
+      </th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="contacts && contacts.length > 0 && totalContacts != 0; else noContacts">
+      <tr *ngFor="let contact of contacts">
+        <td *ngIf="contact.fileName!=null">
+          <img *ngIf="contact.imageByte" class="card-image" [src]="'data:image/jpeg;base64,' + contact.imageByte" alt="Contact Image"
+          [style.height.px]="50" [style.width.px]="50" style="border-radius: 50%;">
+        </td>
+        <td *ngIf="contact.fileName==null">
+          <img
+            src="assets/DefaultImage.jpg"
+            alt="image"
+            width="50"
+            height="50"
+            style="border-radius: 50%"
+          />
+        </td>
+        <td>{{ contact.firstName }} {{ contact.lastName }}</td>
+        <td>
+          <a class="btn btn-outline-warning m-1" [routerLink]="['/contactDetails', contact.contactId]" routerLinkActive="router-link-active">
+              <i class="fas fa-info-circle"></i>
+          </a>
+          <a *ngIf="isAuthenticated" class="btn btn-outline-info m-1" [routerLink]="['/editContact', contact.contactId]" routerLinkActive="router-link-active">
+              <i class="fas fa-edit"></i>
+          </a>
+          <button *ngIf="isAuthenticated" class="btn btn-outline-danger m-1" (click)="deleteContact(contact.contactId)">
+              <i class="fas fa-trash-alt"></i>
+          </button>
+      </td>
+      </tr>
+    </tbody>
+
+    <ng-template #noContacts>
+      <tr *ngIf="!loading">
+        <td colspan="4" class="text-center justify-content-center">No contacts found</td>
+      </tr>
+    </ng-template>
+  </table>
+
+  <div *ngIf="totalContacts != 0" class="pagination-container">
+    <!-- Previous and Next Buttons -->
+    <div class="pagination-navigation">
+      <button class="btn btn-outline-primary" (click)="onPageChange(currentPage - 1, selectedLetter)" [disabled]="currentPage === 1">
+        <i class="fas fa-chevron-left"></i> <!-- Font Awesome icon for "chevron left" -->
+      </button>
+      <button class="btn btn-outline-primary" (click)="onPageChange(currentPage + 1, selectedLetter)" [disabled]="currentPage * pageSize >= totalContacts">
+        <i class="fas fa-chevron-right"></i> <!-- Font Awesome icon for "chevron right" -->
+      </button>
+    </div>
+  
+    <!-- Page Number Buttons -->
+    <div class="pagination-buttons">
+      <button class="btn btn-outline-info" *ngFor="let pageNumber of totalPages" (click)="onPageChange(pageNumber, selectedLetter)" [disabled]="currentPage === pageNumber">
+        {{ pageNumber }}
+      </button>
+    </div>
+  
+    <!-- Page Size Selection -->
+    <div class="page-size-selection">
+      <span>Page Size:</span>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange(selectedLetter)" class="custom-select">
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="fluid-container">
+
+<a *ngIf="isAuthenticated" class="btn btn-outline-info" [routerLink]="['/addContact']" routerLinkActive="router-link-active">Add</a>
+<a class="btn btn-outline-info" [routerLink]="['/paginatedContacts']" routerLinkActive="router-link-active">Show All</a>
+</div>

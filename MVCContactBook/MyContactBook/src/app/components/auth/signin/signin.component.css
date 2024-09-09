@@ -1,0 +1,36 @@
+.custom-form {
+    border: 2px solid #ced4da;
+    background-color: #f8f9fa;
+}
+
+.custom-form label {
+    color: #343a40;
+}
+
+.custom-form input {
+    border: 1px solid #ced4da;
+}
+
+.custom-btn {
+    background-color: #68adf7;
+    border-color: #9cc9f9;
+    margin: 6px;
+    color: white;
+    text-align: center;
+    
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.forgot-password-link {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+   
+        text-align: center; /* Center align the link */
+
+    
+}

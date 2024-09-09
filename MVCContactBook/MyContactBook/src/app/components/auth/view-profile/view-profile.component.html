@@ -1,0 +1,29 @@
+<div class="container">
+    <h2 class="text-center my-4">Details </h2>
+    <div class="card mb-3 shadow-sm mx-auto" style="max-width: 500px; width: 100%;">
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p class="card-text"><i class="fa-solid fa-user"></i> Name: {{user.firstName}} {{user.lastName}}</p>            
+                    <p class="card-text"><i class="fas fa-phone"></i> Contact: {{user.contactNumber}}</p>            
+                    <p class="card-text"><i class="fas fa-envelope"></i> Email: {{user.email}}</p>
+
+                </div>
+            </div>
+            <div class="col-md-4 text-center" *ngIf="user.fileName!=null">
+                    <img *ngIf="user.imageByte" class="img-fluid rounded-circle mt-3"  [src]="'data:image/jpeg;base64,' + user.imageByte" alt="Contact Image"
+                    [style.height.px]="100" [style.width.px]="100">
+            </div>
+            <div class="col-md-4 text-center" *ngIf="user.fileName==null">
+                <img src="assets/DefaultImage.jpg" class="img-fluid rounded-circle mt-3" alt="Profile Picture" width="100" height="100" />
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    <a *ngIf="isAuthenticated" class="btn btn-outline-info m-1" [routerLink]="['/editUser', user.loginId]" routerLinkActive="router-link-active">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <a class="btn btn-outline-success" [routerLink]="['/paginatedContacts']" routerLinkActive="router-link-active">Back to home</a>
+</p>

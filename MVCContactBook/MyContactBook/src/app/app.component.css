@@ -1,0 +1,6 @@
+.dropdown-divider {
+    height: 1px;
+    margin: .5rem 0;
+    overflow: hidden;
+    background-color: #e9ecef;
+}

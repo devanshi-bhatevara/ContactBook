@@ -1,0 +1,90 @@
+<header>
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
+      <div class="container-fluid">
+          <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="router-link-active" >My Contact Book</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                  aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+              <ul class="navbar-nav flex-grow-1">
+                  <li class="nav-item">
+                      <a class="nav-link text-dark" [routerLink]="['/home']" routerLinkActive="router-link-active" >Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link text-dark" [routerLink]="['/paginatedContacts']" routerLinkActive="router-link-active" >Contacts</a>
+                  </li>
+                  <div ngbDropdown display="dynamic" class="d-inline-block">
+                    <button type="button" class="btn" id="dropdownBasic1" ngbDropdownToggle >
+                        Reports </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                     
+                        <ul class="nav navbar-nav ml-auto" >
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/basedOnBirthday']" routerLinkActive="router-link-active" >Birthday Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/basedOnState']" routerLinkActive="router-link-active" > State Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/basedOnCountry']"  routerLinkActive="router-link-active"  style="cursor: pointer;" routerLinkActive="router-link-active" >Country Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/basedOnGender']"  routerLinkActive="router-link-active"  style="cursor: pointer;" routerLinkActive="router-link-active" >Gender Report</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+               
+              </ul>
+              <ul class="nav navbar-nav ml-auto" *ngIf="!isAuthenticated">
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/signup']" routerLinkActive="router-link-active" ><span class="fas fa-user-plus"></span> Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/signin']" routerLinkActive="router-link-active" ><span class="fas fa-sign-in-alt"></span> Sign In</a>
+                </li>
+            </ul>
+            
+            <div class="row" *ngIf="isAuthenticated">
+                <div class="col">
+                    <div ngbDropdown display="dynamic" class="d-inline-block">
+                        <button type="button" class="btn" id="dropdownBasic1" ngbDropdownToggle style="width: 165px;" >
+                            <img src="{{ user.imageByte ? 'data:image/jpeg;base64,' + user.imageByte : 'assets/DefaultImage.jpg' }}"
+                               class="rounded-circle mr-2"
+                               alt="User"
+                               style="width: 30px; height: 30px;">     {{username}} </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                         
+                            <ul class="nav navbar-nav ml-auto" >
+                                <li class="nav-item">
+                                    <a class="nav-link" [routerLink]="['/changePassword']" routerLinkActive="router-link-active" ><i class="fa-solid fa-lock"></i> Change Password</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" [routerLink]="['/profile', username]" routerLinkActive="router-link-active" ><i class="fa-solid fa-user"></i>   View Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" (click)="signOut()" [routerLink]="['/home']" routerLinkActive="router-link-active"  style="cursor: pointer;" routerLinkActive="router-link-active" ><span class="fas fa-sign-out-alt"></span> Sign Out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>       
+          </div>
+      </div>
+  </nav>
+</header>
+<div class="container">
+  <main role="main" class="pb-3">
+
+      <router-outlet></router-outlet>
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+  <div class="container-fluid">
+      &copy; 2024 - My Contact Book App - <a [routerLink]="['/privacy']" routerLinkActive="router-link-active" >Privacy</a>
+  </div>
+</footer>

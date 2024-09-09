@@ -1,0 +1,138 @@
+﻿ <h3 class="text-center">Contacts based on state</h3>  
+ <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select id="divisionDropdown" class="form-control" asp-items="@(new SelectList(ViewBag.Countries, "CountryId", "CountryName"))">
+                    <option value="">--Select Country--</option>
+                </select>
+            </div>
+    </div>
+    <div class="col-md-6">
+
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select id="positionDropdown" class="form-control">
+                    <option value="">--Select State--</option>
+                    @foreach (var position in ViewBag.States)
+                    {
+                        <option value="@position.StateId" data-category="@position.CountryId">@position.StateName</option>
+                    }
+                </select>
+            </div>
+            </div>
+    </div>
+
+<table class="table">
+      @if (ViewBag.State != null)
+    {
+        <thead>
+            <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Is Favourite</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>Birth Date</th>
+        </tr>
+    </thead>
+    }
+    @if (ViewBag.State != null)
+    {
+        <tbody>
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="10" class="text-center">No records found</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var contact in Model)
+                {
+                    <tr>
+                        <td>@contact.FirstName</td>
+                        <td>@contact.LastName</td>
+                        <td>@contact.Phone</td>
+                        <td>@contact.Address</td>
+                        <td>@contact.Email</td>
+                        <td>@contact.Gender</td>
+                        <td>@(contact.IsFavourite ? "Yes" : "No")</td>
+                        <td>@contact.CountryName</td>
+                        <td>@contact.StateName</td>
+                        <td>
+                            @if(contact.birthDate != null)
+                            {
+                                @contact.birthDate.ToShortDateString();     
+                            }
+                            else
+                            {
+                                
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    }
+</table>
+<div class="container">
+    <a asp-action="Index" class="btn btn-secondary">Back To List</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+        var divisionDropdown = document.getElementById("divisionDropdown");
+        var positionDropdown = document.getElementById("positionDropdown");
+
+        var selectedCountry = localStorage.getItem("selectedCountry");
+        if (selectedCountry) {
+            divisionDropdown.value = selectedCountry;
+        }
+
+        divisionDropdown.addEventListener("change", function () {
+            localStorage.setItem("selectedCountry", divisionDropdown.value);
+
+            window.location.href = '@Url.Action("GetContactByState", "Contact")?countryId=' + encodeURIComponent(divisionDropdown.value);
+        });
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var stateId = urlParams.get('stateId');
+        if (stateId) {
+            positionDropdown.value = stateId;
+        }
+
+        positionDropdown.addEventListener("change", function () {
+            window.location.href = '@Url.Action("GetContactByState", "Contact")?stateId=' + encodeURIComponent(positionDropdown.value);
+        });
+    });
+    $(function () {
+        // Initially hide all state options
+        $('#positionDropdown option').hide();
+
+        // Get the initially selected country
+        var initialCountry = $('#divisionDropdown').val();
+
+        // Show state options corresponding to the initially selected country
+        $('#positionDropdown option[data-category="' + initialCountry + '"]').show();
+
+        $('#divisionDropdown').change(function () {
+            var selectedCountry = $(this).val();
+            $('#positionDropdown option').hide();
+            $('#positionDropdown option[data-category="' + selectedCountry + '"]').show();
+
+            // Select the first visible option in the state dropdown
+            $('#positionDropdown').val($('#positionDropdown option[data-category="' + selectedCountry + '"]:visible:first').val());
+        });
+    });
+
+</script>
+

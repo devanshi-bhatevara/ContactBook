@@ -1,0 +1,46 @@
+﻿
+<h3 class="text-center">Contacts count based on country</h3>
+
+<div class="row d-flex justify-content-center align-items-center">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label"></label>
+            <select id="divisionDropdown" class="form-control" asp-items="@(new SelectList(ViewBag.Countries, "CountryId", "CountryName"))">
+                <option value="">--Select Country--</option>
+            </select>
+        </div>
+</div>
+</div>
+<div class=" d-flex justify-content-center">
+<div class="card col-md-6">
+@if(ViewBag.Country !=null)
+{
+        
+   
+    <div class="card-header">Total count
+    </div>
+    <div class="card-body">@ViewBag.Count</div>
+    }
+</div>
+</div>
+<div class="container">
+    <a asp-action="Index" class="btn btn-secondary">Back To List</a>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedCountry = document.getElementById("divisionDropdown");
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var countryId = urlParams.get('countryId');
+
+        if (countryId) {
+            selectedCountry.value = countryId; 
+        }
+
+        selectedCountry.addEventListener("change", function () {
+            window.location.href = '@Url.Action("GetContactsCountBasedOnCountry", "Contact")?countryId=' + encodeURIComponent(selectedCountry.value);
+        });
+    });
+</script>
+
+

@@ -1,0 +1,41 @@
+﻿@using ContactBookClientApp.ViewModels
+@model ContactViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Delete</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-subtitle mb-4">Are you sure you want to delete?</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">First Name:</dt>
+                        <dd class="col-sm-8">@Model.FirstName</dd>
+                        <dt class="col-sm-4">Last Name:</dt>
+                        <dd class="col-sm-8">@Model.LastName</dd>
+                        <dt class="col-sm-4">Phone:</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+                        <dt class="col-sm-4">Address:</dt>
+                        <dd class="col-sm-8">@Model.Address</dd>
+                        <dt class="col-sm-4">Gender:</dt>
+                        <dd class="col-sm-8">@((Model.Gender == "F") ? "Female" : "Male")</dd>
+                        <dt class="col-sm-4">Favourite:</dt>
+                        <dd class="col-sm-8">@((Model.IsFavourite) ? "Yes" : "No")</dd>
+                    </dl>
+                    <hr />
+                    <form asp-action="DeleteConfirm" method="post">
+                        <input type="hidden" asp-for="ContactId" />
+                        <div class="form-group">
+                            <input type="submit" value="Delete" class="btn btn-danger mr-2" /> |
+                            <a asp-action="Index" class="btn btn-secondary">Back To List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

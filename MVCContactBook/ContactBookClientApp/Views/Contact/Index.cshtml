@@ -1,0 +1,174 @@
+﻿@using ContactBookClientApp.ViewModels
+@model List<ContactViewModel>
+
+@{
+    var distinctLetters = ViewBag.DistinctLetters;
+    // Retrieve search parameter from ViewBag
+    string search = ViewBag.Search;
+
+}
+<h3 class="col-sm-10">Contacts</h3>
+<a asp-action="Favourites" class="btn btn-warning m-4 mx-0 col-sm-2">
+    <span class="mr-9">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+        </svg>
+    </span>
+    View Favorites
+</a>
+<h2 class="text-primary">@ViewBag.Letter</h2>
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" id="searchInput" name="search" class="form-control" placeholder="Search..." value="@search">
+        <input type="hidden" name="letter" value="@ViewBag.Letter" />
+        <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        @if (!string.IsNullOrEmpty(search))
+        {
+            <div class="input-group-append">
+                <a href="/Contact/Index?letter=@ViewBag.Letter&pageSize=@ViewBag.PageSize" class="btn btn-secondary">Clear</a>
+            </div>
+        }
+    </div>
+</form>
+
+        @if (distinctLetters != null && distinctLetters.Count>0)
+        {
+            <form method="get">
+                <div class="btn-group mb-3" role="group">
+                    @foreach (var letter in distinctLetters)
+                    {
+                        <button class="btn btn-outline-primary" type="submit" name="letter" value="@letter">@letter</button>
+                    }
+                    <button class="btn btn-outline-primary" type="submit" name="letter" value="">Show All</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <p>No records found</p>
+        }
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Profile Photo</th>
+                <th>
+                    Name
+                    <a asp-action="Index" asp-route-sortOrder="asc" asp-route-letter="@ViewBag.Letter" asp-route-pageSize="@ViewBag.PageSize" asp-route-search="@search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path d="M8.354 4.354a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14a.5.5 0 0 1-1 0V5.707L5.646 7.061a.5.5 0 1 1-.708-.708l3-3z" />
+                        </svg>
+                    </a>
+                    <a asp-action="Index" asp-route-sortOrder="desc" asp-route-letter="@ViewBag.Letter" asp-route-pageSize="@ViewBag.PageSize" asp-route-search="@search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path d="M8.354 11.354a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 9.293V2a.5.5 0 0 0-1 0v7.293L5.354 7.646a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>
+                    </a>
+                </th>
+                <th></th>
+
+                <th>Action</th>
+            </tr>
+        </thead>
+        @if (Model == null || Model.Count == 0)
+        {
+            <tbody>
+            <td colspan="4" class="text-center">No records found</td>
+            </tbody>
+        }
+        else
+        {
+            <tbody>
+                @foreach (var contact in Model)
+                {
+                    <tr onclick="location.href='@Url.Action("Details", "Contact", new { id = contact.ContactId })';" style="cursor: pointer;">
+                        @if (string.IsNullOrEmpty(contact.FileName))
+                        {
+                            <td><img src="@Url.Content("~/Uploads/DefaultImage.jpg")" alt="Profile" width="50" height="50" class="rounded-circle" /></td>
+                        }
+                        else
+                        {
+                            <td><img src="@Url.Content("~/Uploads/" + contact.FileName)" alt="Profile" width="50" height="50" class="rounded-circle" /></td>
+                        }
+                        <td>@contact.FirstName @contact.LastName</td>
+                        <td>
+                            @if (contact.IsFavourite)
+                            {
+                                <span class="mr-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill text-warning" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                    </svg>
+                                </span>
+                            }
+                        </td>
+                        <td>
+
+                            <a asp-action="Details" asp-route-id="@contact.ContactId" class="btn btn-sm btn-outline-info">Details</a>
+                            <a asp-action="Edit" asp-route-id="@contact.ContactId" class="btn btn-sm btn-outline-dark">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@contact.ContactId" class="btn btn-sm btn-outline-danger">Delete</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+
+@if (Model.Count > 0)
+{
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <!-- Page size dropdown -->
+        <div>
+            <label for="pageSize">Page Size:</label>
+            <select id="pageSize" onchange="changePageSize(this)" class="form-control form-control-sm">
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+        <!-- Pagination -->
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                    <a class="page-link" href="/Contact/Index?letter=@ViewBag.Letter&search=@search&page=@i&pageSize=@ViewBag.PageSize&sortOrder=@ViewBag.SortOrder">@i</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+<a asp-action="Create" class="btn btn-dark mt-4">
+    Add New Contact
+</a>
+
+<script>
+    // Initialize page size dropdown with current selected size
+    document.addEventListener("DOMContentLoaded", function () {
+        var currentPageSize = @(ViewBag.PageSize);
+        var pageSizeDropdown = document.getElementById("pageSize");
+        for (var i = 0; i < pageSizeDropdown.options.length; i++) {
+            if (pageSizeDropdown.options[i].value === currentPageSize.toString()) {
+                pageSizeDropdown.selectedIndex = i;
+                break;
+            }
+        }
+    });
+
+    // Function to handle page size change
+    function changePageSize(select) {
+        var pageSize = select.value;
+        var currentPage = 1;
+        var letter = "@ViewBag.Letter";
+        var sortOrder = "@ViewBag.SortOrder";
+        var search = "@search";
+        window.location.href = "/Contact/Index?letter=" + letter + "&search=" + search + "&page=" + currentPage + "&pageSize=" + pageSize + "&sortOrder=" + sortOrder;
+    }
+
+</script>

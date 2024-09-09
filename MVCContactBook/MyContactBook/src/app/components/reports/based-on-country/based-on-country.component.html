@@ -1,0 +1,51 @@
+<div class="container"><h2 class="text-center">Get Contacts count based on Country</h2></div>
+
+<form [formGroup]="contactForm">
+
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="col-md-6">   
+
+    <label for="countryId" class="form-label"><b> Select Country: </b></label>
+    <select class="form-control" id="countryId" formControlName="countryId">
+      <option [ngValue]="0" selected disabled>---Select---</option>
+      <option *ngFor="let country of country" [value]="country.countryId">
+            {{ country.countryName }}
+        </option>
+    </select>
+    <div *ngIf="formControl['countryId'].invalid && formControl['countryId'].touched">
+        <small class="text-danger">
+            Country is required
+        </small>
+    </div>
+</div>
+</div>
+</form>
+
+<div *ngIf="formControl['countryId'].value !=0 && totalContacts<=0" class="mt-3">
+  <div class="col-md-12 d-flex align-items-center justify-content-center">
+    <div class="card col-md-6 text-center">
+      <h5 class="card-header">No contacts found</h5>
+    </div>
+  </div>
+</div>
+<br>
+<div *ngIf="totalContacts>0">
+  <div class="col-md-12 d-flex align-items-center justify-content-center">
+    <div class="card col-md-6 text-center">
+      <h5 class="card-header">Total Contacts</h5>
+
+      <div class="card-body">
+        <p class="card-text">{{ totalContacts }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <button class="btn btn-secondary btn-block" [routerLink]="['/paginatedContacts']"
+      routerLinkActive="router-link-active">
+      <i class="fas fa-arrow-left"></i> Back to List
+    </button>
+    </div>
+  

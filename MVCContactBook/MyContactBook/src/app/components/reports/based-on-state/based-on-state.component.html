@@ -1,0 +1,101 @@
+<div class="container"><h2 class="text-center">Get Contacts based on State</h2></div>
+
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <form [formGroup]="contactForm">      
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="countryId" class="form-label">Country: </label>
+                    <select class="form-control" id="countryId" formControlName="countryId">
+                        <option [ngValue]="0" selected disabled>---Select---</option>
+                        <option *ngFor="let country of country" [value]="country.countryId">
+                            {{ country.countryName }}
+                        </option>
+                    </select>
+                    <div *ngIf="formControl['countryId'].invalid && formControl['countryId'].touched">
+                        <small class="text-danger">
+                            Country is required
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="stateId" class="form-label">State: </label>
+                    <select class="form-control" id="stateId" formControlName="stateId">
+                        <option [ngValue]="0" selected disabled>---Select---</option>
+                        <option *ngFor="let state of state" [value]="state.stateId">
+                            {{ state.stateName }}
+                        </option>
+                    </select>
+                    <div *ngIf="formControl['stateId'].invalid && formControl['stateId'].touched">
+                        <small class="text-danger">
+                            State is required
+                        </small>
+                    </div>
+                </div>
+            </div>  
+        </form>
+<div *ngIf="formControl['stateId'].value != 0 && !contacts">
+        <div class="rounded-corner no-data text-danger col-md-12 d-flex justify-content-center">
+            <p>No data available for the selected state</p>
+          </div>
+        </div>
+        <div *ngIf="contacts" >
+            <table class="table table-borderd">
+                <thead>
+                    <tr>
+                        <th>Profile Photo</th>
+                        <th>Name</th>                  
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Birthdate</th>
+                        <th>Is Favourite?</th>
+                        <th>Address</th>
+         
+                    </tr>
+                </thead>
+                <tbody *ngIf="contacts && contacts.length > 0 ; else noContacts">
+                    <tr *ngFor="let contact of contacts">
+                        <td *ngIf="contact.fileName!=null">
+                            <img *ngIf="contact.imageByte" class="card-image" [src]="'data:image/jpeg;base64,' + contact.imageByte" alt="Contact Image"
+                                [style.height.px]="50" [style.width.px]="50" style="border-radius: 50%;">
+                            <img *ngIf="!contact.fileName" src="assets/DefaultImage.jpg" alt="Profile" width="50" height="50" style="border-radius: 50%">
+                        </td>
+                        <td *ngIf="contact.fileName==null">
+                            <img src="assets/DefaultImage.png" alt="image" width="50" height="50" style="border-radius: 50%">
+                        </td>
+                        <td>{{ contact.firstName }} {{ contact.lastName }}</td>
+                       
+                       
+                        <td>{{contact.phone}}</td>
+                        <td>{{contact.email}}</td>
+                        <td>{{contact.gender == 'F' ? 'Female' :
+                            'Male'}}</td>
+                        <td>{{contact.birthDate| date:'yyy-MM-dd'}}</td>
+                        <td>
+                           
+                            <i *ngIf="contact.isFavourite" class="fa fa-star text-warning"></i>
+                            <i *ngIf="!contact.isFavourite" class="fa fa-star" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></i>
+                    </td>
+                        <td>{{contact.address}}</td>
+                       
+                    </tr>
+                </tbody>
+                <ng-template #noContacts>
+                    <tr>
+                        <td colspan="3">No contacts found</td>
+                    </tr>
+                </ng-template>
+            </table>
+           </div>
+        
+           <br>
+           <div class="row">
+         
+           </div>
+           <button class="btn btn-secondary btn-block" [routerLink]="['/paginatedContacts']"
+           routerLinkActive="router-link-active">
+           <i class="fas fa-arrow-left"></i> Back to List
+         </button>
+    </div>
+</div>

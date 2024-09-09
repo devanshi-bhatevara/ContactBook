@@ -1,0 +1,87 @@
+<div class="container">
+    <h2 class="custom-heading  text-center my-4">Contacts: {{ monthNames[selectedMonth - 1] }}
+   </h2>
+ 
+   <div class="d-flex justify-content-center align-items-center">
+    <div class="form-group rounded-corner col-md-6" >
+     <label for="monthDropdown"><b>Select Month:</b></label>
+     <select id="monthDropdown" class="form-control" [(ngModel)]="selectedMonth" (change)="onMonthSelected()">
+        <option [ngValue]="0" selected disabled>---Select---</option>
+       <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
+     </select>
+     <div *ngIf="!selectedMonth" class="text-danger">
+       Please select a month to view monthly salary data.
+     </div>
+   </div>
+</div>
+ 
+ 
+<div *ngIf="selectedMonth != 0 && !contacts">
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <td class="text-center" colspan="8"><b>No contacts found</b></td>
+        </tr>
+    </thead>
+    </table>
+
+</div>
+   <div *ngIf="contacts &&  selectedMonth" >
+    <table class="table table-borderd mt-3">
+        <thead>
+            <tr>
+                <th>Profile Photo</th>
+                <th>Name</th>                  
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Birthdate</th>
+                <th>Is Favourite?</th>
+                <th>Address</th>
+ 
+            </tr>
+        </thead>
+        <tbody *ngIf="contacts && contacts.length > 0">
+            <tr *ngFor="let contact of contacts">
+                <td *ngIf="contact.fileName!=null">
+                    <img *ngIf="contact.imageByte" class="card-image" [src]="'data:image/jpeg;base64,' + contact.imageByte" alt="Contact Image"
+                        [style.height.px]="50" [style.width.px]="50" style="border-radius: 50%;">
+                    <img *ngIf="!contact.fileName" src="assets/DefaultImage.jpg" alt="Profile" width="50" height="50" style="border-radius: 50%">
+                </td>
+                <td *ngIf="contact.fileName==null">
+                    <img src="assets/DefaultImage.png" alt="image" width="50" height="50" style="border-radius: 50%">
+                </td>
+                <td>{{ contact.firstName }} {{ contact.lastName }}</td>
+               
+               
+                <td>{{contact.phone}}</td>
+                <td>{{contact.email}}</td>
+                <td>{{contact.gender == 'F' ? 'Female' :
+                    'Male'}}</td>
+                <td>{{contact.birthDate| date:'yyy-MM-dd'}}</td>
+                <td>
+                   
+                    <i *ngIf="contact.isFavourite" class="fa fa-star text-warning"></i>
+                    <i *ngIf="!contact.isFavourite" class="fa fa-star" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></i>
+            </td>
+                <td>{{contact.address}}, {{contact.stateName}}, {{contact.countryName}}</td>
+               
+            </tr>
+        </tbody>
+ 
+    </table>
+   </div>
+   
+
+
+ 
+   <br>
+   <div class="row">
+       
+   </div>
+   <button class="btn btn-secondary btn-block" [routerLink]="['/paginatedContacts']"
+   routerLinkActive="router-link-active">
+   <i class="fas fa-arrow-left"></i> Back to List
+ </button>
+ </div>

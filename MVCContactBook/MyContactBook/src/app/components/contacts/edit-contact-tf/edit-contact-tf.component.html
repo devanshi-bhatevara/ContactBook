@@ -1,0 +1,185 @@
+<div class="container">
+    <h2>Edit Contact TF</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <form #myForm="ngForm" class="need-validation" (ngSubmit)="onSubmit(myForm)">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label class="form-label" for="firstName">First Name:</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                [(ngModel)]="contact.firstName" required minlength="3">
+                            <div *ngIf="myForm.controls['firstName']?.invalid && myForm.controls['firstName']?.touched">
+                                <small class="text-danger"
+                                    *ngIf="myForm.controls['firstName']?.errors?.['required']">First name
+                                    is
+                                    required.</small>
+                                <small class="text-danger"
+                                    *ngIf="myForm.controls['firstName']?.errors?.['minlength']">First name
+                                    must be
+                                    at least 3 characters
+                                    long.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="lastName">Last Name:</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                [(ngModel)]="contact.lastName" required minlength="3">
+                            <div *ngIf="myForm.controls['lastName']?.invalid && myForm.controls['lastName']?.touched">
+                                <small class="text-danger"
+                                    *ngIf="myForm.controls['lastName']?.errors?.['required']">Last Name is
+                                    required.</small>
+                                <small class="text-danger"
+                                    *ngIf="myForm.controls['lastName']?.errors?.['minlength']">Last Name
+                                    must be
+                                    at least 3 characters
+                                    long.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="phone">Contact Number:</label>
+                            <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="contact.phone"
+                                required minlength="10" maxlength="10" pattern="^\+?\d{10,13}$">
+                            <div *ngIf="myForm.controls['phone']?.invalid && myForm.controls['phone']?.touched">
+                                <small class="text-danger"
+                                    *ngIf="myForm.controls['phone']?.errors?.['required']">Contact
+                                    number is required.</small>
+                                <small class="text-danger" *ngIf="myForm.controls['phone']?.errors?.['pattern']">Invalid
+                                    contact number format.</small>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="mb-3">
+                                <label class="form-label" for="address">address:</label>
+                                <input type="text" class="form-control" id="address" name="address"
+                                    [(ngModel)]="contact.address" required minlength="3">
+                                <div *ngIf="myForm.controls['address']?.invalid && myForm.controls['address']?.touched">
+                                    <small class="text-danger"
+                                        *ngIf="myForm.controls['address']?.errors?.['required']">address is
+                                        required.</small>
+                                    <small class="text-danger"
+                                        *ngIf="myForm.controls['address']?.errors?.['minlength']">address
+                                        must be
+                                        at least 3 characters
+                                        long.</small>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    [(ngModel)]="contact.email" required email>
+                                <div *ngIf="myForm.controls['email']?.invalid && myForm.controls['email']?.touched">
+                                    <small class="text-danger"
+                                        *ngIf="myForm.controls['email']?.errors?.['required']">Email is
+                                        required.</small>
+                                    <small class="text-danger"
+                                        *ngIf="myForm.controls['email']?.errors?.['email']">Invalid email
+                                        format.</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" style="display: flex; align-items: center;">
+                                <label class="form-label" for="imageByte">Profile Image:</label>
+                                <input type="file" class="form-control" id="imageByte" #imageInput
+                                    (change)="onFileChange($event)">
+                                <small class="text-danger" *ngIf="fileSizeError">File size exceeds the maximum limit of
+                                    50 KB.It will set default image.</small>
+
+                                <!-- Add the cross button to remove the selected file -->
+                                <button type="button" class="btn btn-danger" *ngIf="imageUrl" (click)="removeFile()"><i
+                                        class="fas fa-times"></i></button>
+                            </div>
+
+                            <!-- Display the uploaded image -->
+                            <div class="mb-3" *ngIf="imageUrl">
+                                <img [src]="imageUrl" alt="Uploaded Image" class="img-thumbnail"
+                                    style="max-width: 200px; max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Gender:</label>
+                                <div>
+                                    <input type="radio" id="true" name="gender" value="M" [(ngModel)]="contact.gender"
+                                        required>
+                                    <label class="form-label" for="true"> Male</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="false" name="gender" value="F" [(ngModel)]="contact.gender"
+                                        required>
+                                    <label class="form-label" for="false">Female</label>
+                                </div>
+                                <div *ngIf="myForm.controls['gender']?.invalid && myForm.controls['gender']?.touched">
+                                    <small class="text-danger">Gender is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="mb-3">
+                                <label class="form-label">Is Favourite:</label>
+                                <div>
+                                    <input type="checkbox" id="isFavourite" name="isFavourite"
+                                        [(ngModel)]="contact.isFavourite">
+                                    <label class="form-label" for="isFavourite">Favourite</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="countryId">Country:</label>
+                                <select id="countryId" name="countryId" class="form-control"
+                                    [(ngModel)]="contact.countryId" (change)="onSelectCountry(contact.countryId)"
+                                    required>
+                                    <option value="0" disabled>Select your country</option>
+                                    <option *ngFor="let country of country" [ngValue]="country.countryId">
+                                        {{country.countryName}}</option>
+                                </select>
+                                <div
+                                    *ngIf="myForm.controls['countryId']?.invalid || myForm.controls['countryId'].value == 0 && myForm.controls['countryId']?.touched">
+                                    <small class="text-danger">Country is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="mb-3">
+                                <label class="form-label" for="stateId">State:</label>
+                                <select id="stateId" name="stateId" class="form-control" [(ngModel)]="contact.stateId"
+                                    required>
+                                    <option value="0" disabled>Select your state</option>
+                                    <option *ngFor="let state of state" [ngValue]="state.stateId">{{state.stateName}}
+                                    </option>
+                                </select>
+                                <div
+                                    *ngIf="myForm.controls['stateId']?.invalid|| myForm.controls['stateId'].value == 0 && myForm.controls['stateId']?.touched">
+                                    <small class="text-danger"> State is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="birthDate">Date of Birth:</label>
+                                <input type="date" class="form-control" id="birthDate" name="birthDate"
+                                    [(ngModel)]="contact.birthDate">
+
+                            </div>
+                        </div>
+
+                    </div>
+                        <button type="submit"
+                            [disabled]="myForm.invalid || myForm.controls['stateId'].value == 0">Submit</button>
+            </form>
+
+        </div>
+    </div>
+</div>

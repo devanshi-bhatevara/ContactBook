@@ -1,0 +1,35 @@
+<div class="container"><h2 class="text-center">Get Contacts count based on Gender</h2></div>
+<br>
+<div *ngIf="totalMale>0  else noMaleData">
+  <div class="col-md-12 d-flex align-items-center justify-content-center">
+    
+    <div class="card col-md-5 text-center">
+      <h5 class="card-header">Total Male</h5>
+
+      <div class="card-body">
+        <p class="card-text">{{ totalMale }}</p>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+<div *ngIf="totalFemale>0  else noFemaleData" class="card col-md-5 text-center">
+  <h5 class="card-header">Total Female</h5>
+  
+  <div class="card-body">
+      <p class="card-text">{{ totalFemale }}</p>
+    </div>
+  </div>
+    </div>
+  </div>
+  <ng-template #noMaleData >  <small class="text-danger">
+    No contacts found for this gender    </small></ng-template>
+  
+
+  <ng-template #noFemaleData >  <small class="text-danger">
+    No contacts found for this gender    </small></ng-template>
+  <div class="container mt-3">
+  <button class="btn btn-secondary btn-block" [routerLink]="['/paginatedContacts']"
+  routerLinkActive="router-link-active">
+  
+  <i class="fas fa-arrow-left"></i> Back to List
+</button>
+</div>

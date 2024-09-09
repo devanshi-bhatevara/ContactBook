@@ -1,0 +1,52 @@
+﻿@using ContactBookClientApp.ViewModels
+@model UpdateContactViewModel
+
+<div class="container" style="display: flex; justify-content: center;">
+
+    <div class="card container text-dark bg-light m-3 p-0" style="max-width: 30rem;">
+        <div class="card-header d-flex align-items-center justify-content-center">
+            @if (Model.FileName == null)
+            {
+                <img src="~/uploads/DefaultImage.jpg" alt="Employee Image" width="70" height="70" style="border-radius: 50%; margin-right: 10px;" />
+            }
+            else
+            {
+                <img src="~/uploads/@Model.FileName" alt="Employee Image" width="70" height="70" style="border-radius: 50%; margin-right: 10px;" />
+            }
+            <h4 class="mb-0">@Model.FirstName @Model.LastName</h4>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <h6>Phone: @Model.Phone </h6>
+                <h6>Address: @Model.Address </h6>
+                <h6>Email: @Model.Email </h6>
+                @if (@Model.Gender == "F")
+                {
+                    <h6>Gender: Female</h6>
+                }
+                else
+                {
+                    <h6>Gender: Male</h6>
+                }
+                @if (@Model.IsFavourite)
+                {
+                    <h6>Favourite: Yes</h6>
+                }
+                else
+                {
+                    <h6>Favourite: No</h6>
+                }
+                <h6>Country: @Model.Country.CountryName</h6>
+                <h6>State: @Model.State.StateName</h6>
+                @if (Model.birthDate.HasValue)
+                {
+                    <h6>Birth Date: @Model.birthDate.Value.ToShortDateString()</h6>
+                }
+                <div style="display: flex; justify-content: center; margin-top: 10px;">
+                    <a asp-action="Index" asp-controller="Contact" class="btn btn-secondary" style="margin-left: 10px;">Back To List</a>
+                </div>
+            </p>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,55 @@
+﻿@using ContactBookClientApp.ViewModels
+
+@model UpdateUserViewModel
+
+<h1>Update Profile</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input asp-for="LoginId" type="hidden" />
+    <input type="hidden" asp-for="FileName" />
+    <input type="hidden" asp-for="ImageByte" />
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label"></label>
+        <input asp-for="LastName" class="form-control" />
+
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContactNumber" class="control-label"></label>
+        <input asp-for="ContactNumber" class="form-control" />
+
+        <span asp-validation-for="ContactNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="File" class="control-label"></label>
+        <input asp-for="File" type="file" class="form-control" accept="image/*" />
+        <span asp-validation-for="File" class="text-danger"></span>
+        <small id="fileError" class="text-danger" style="display: none;">Please select only image files.</small>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.FileName))
+    {
+        <div class="form-group">
+            <label>Current Image:</label><br />
+            <img src="/uploads/@Model.FileName" class="img-thumbnail" alt="Current Image" width="100" height="100" />
+        </div>
+  @*       <div class="form-group">
+            <label asp-for="RemoveImage" class="control-label"></label>
+            <input asp-for="RemoveImage" type="checkbox" />
+            <span asp-validation-for="RemoveImage" class="text-danger"></span>
+        </div> *@
+
+    }
+
+    <div class="form-group">
+        <input type="submit" value="Update" class="btn btn-success" />
+    </div>
+</form>
